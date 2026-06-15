@@ -87,7 +87,7 @@ export default function NetworkMapHub({ servers }) {
   }, [source, target, servers]);
 
   return (
-    <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-full col-span-1 md:col-span-2 lg:col-span-1">
+    <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto col-span-1 md:col-span-2 lg:col-span-1">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">

@@ -52,7 +52,7 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
   }, [readQueue]);
 
   return (
-    <div className={`bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-full overflow-hidden relative`}>
+    <div className={`bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto overflow-hidden relative`}>
       <div className="flex justify-between items-center mb-4 z-10">
         <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
           <ArrowRight className="w-5 h-5 text-dashboard-accent" />
@@ -66,9 +66,14 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
         </button>
       </div>
 
-      <div className="text-xs text-slate-400 mb-2 z-10">Live FIFO pipeline</div>
+      <div className="flex justify-between items-center text-xs text-slate-400 mb-2 z-10">
+        <span>Live FIFO pipeline</span>
+        <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-cyan-400 border border-slate-700">
+          Queue Length: {readQueue.length}
+        </span>
+      </div>
       
-      <div className="flex items-center gap-2 overflow-hidden pb-2 min-h-[40px]">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 min-h-[40px] w-full">
         {displayQueue.map((item, i) => (
           <div 
             key={item.id}

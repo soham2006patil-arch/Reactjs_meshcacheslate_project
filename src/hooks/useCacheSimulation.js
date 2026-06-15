@@ -98,19 +98,37 @@ export function useCacheSimulation() {
   }, []);
 
   const addMockData = (serverId) => {
+    const server = servers.find(s => s.id === serverId);
+    if (!server || server.status !== 'ONLINE') return;
+
     const newKeyObj = { key: generateKey(), lastAccessed: Date.now() };
+    const newMemory = Math.min(100, server.memoryUsed + 5);
+    const memoryAdded = newMemory - server.memoryUsed;
+
+    const writeId = `write-${Math.random().toString(36).substring(2, 9)}`;
+    const timestamp = Date.now();
+
+    // 1. Update writeStack history
+    setWriteStack(stack => {
+      // Safeguard: Prevent identical history entry from being inserted twice within same operation
+      if (stack.length > 0 && 
+          stack[0].key === newKeyObj.key && 
+          stack[0].serverId === server.id && 
+          timestamp - stack[0].timestamp < 1000) {
+        return stack;
+      }
+      return [{
+        id: writeId,
+        key: newKeyObj.key,
+        serverId: server.id,
+        timestamp,
+        memoryAdded
+      }, ...stack];
+    });
+
+    // 2. Update servers cache
     setServers(prev => prev.map(s => {
-      if (s.id === serverId && s.status === 'ONLINE') {
-        const newMemory = Math.min(100, s.memoryUsed + 5);
-        // Add to writeStack history
-        setWriteStack(stack => [{
-          id: Math.random().toString(),
-          key: newKeyObj.key,
-          serverId: s.id,
-          timestamp: Date.now(),
-          memoryAdded: newMemory - s.memoryUsed
-        }, ...stack]);
-        
+      if (s.id === serverId) {
         return { ...s, cachedKeys: [...s.cachedKeys, newKeyObj], memoryUsed: newMemory };
       }
       return s;
@@ -118,55 +136,62 @@ export function useCacheSimulation() {
   };
 
   const writeData = (keyStr) => {
-    setServers(prev => {
-      const onlineServers = prev.filter(s => s.status === 'ONLINE');
-      if (onlineServers.length === 0) return prev;
-      
-      const targetServer = onlineServers[Math.floor(Math.random() * onlineServers.length)];
-      const newKeyObj = { key: keyStr, lastAccessed: Date.now() };
-      const newMemory = Math.min(100, targetServer.memoryUsed + 5);
-      
-      // Add to stack
-      setWriteStack(stack => [{
-        id: Math.random().toString(),
+    const onlineServers = servers.filter(s => s.status === 'ONLINE');
+    if (onlineServers.length === 0) return;
+
+    const targetServer = onlineServers[Math.floor(Math.random() * onlineServers.length)];
+    const newKeyObj = { key: keyStr, lastAccessed: Date.now() };
+    const newMemory = Math.min(100, targetServer.memoryUsed + 5);
+    const memoryAdded = newMemory - targetServer.memoryUsed;
+
+    const writeId = `write-${Math.random().toString(36).substring(2, 9)}`;
+    const timestamp = Date.now();
+
+    // 1. Update writeStack history
+    setWriteStack(stack => {
+      // Safeguard: Prevent identical history entry from being inserted twice within same operation
+      if (stack.length > 0 && 
+          stack[0].key === keyStr && 
+          stack[0].serverId === targetServer.id && 
+          timestamp - stack[0].timestamp < 1000) {
+        return stack;
+      }
+      return [{
+        id: writeId,
         key: keyStr,
         serverId: targetServer.id,
-        timestamp: Date.now(),
-        memoryAdded: newMemory - targetServer.memoryUsed
-      }, ...stack]); // LIFO (push to front)
-
-      return prev.map(s => {
-        if (s.id === targetServer.id) {
-          return { ...s, cachedKeys: [...s.cachedKeys, newKeyObj], memoryUsed: newMemory };
-        }
-        return s;
-      });
+        timestamp,
+        memoryAdded
+      }, ...stack];
     });
+
+    // 2. Update servers cache
+    setServers(prev => prev.map(s => {
+      if (s.id === targetServer.id) {
+        return { ...s, cachedKeys: [...s.cachedKeys, newKeyObj], memoryUsed: newMemory };
+      }
+      return s;
+    }));
   };
 
   const undoWrite = (actionId) => {
-    setWriteStack(stack => {
-      const actionIndex = stack.findIndex(a => a.id === actionId);
-      if (actionIndex === -1) return stack;
-      
-      const action = stack[actionIndex];
-      const newStack = [...stack];
-      newStack.splice(actionIndex, 1);
-      
-      // Remove from server
-      setServers(prev => prev.map(s => {
-        if (s.id === action.serverId) {
-          return { 
-            ...s, 
-            cachedKeys: s.cachedKeys.filter(k => k.key !== action.key),
-            memoryUsed: Math.max(0, s.memoryUsed - (action.memoryAdded || 5))
-          };
-        }
-        return s;
-      }));
-      
-      return newStack;
-    });
+    const action = writeStack.find(a => a.id === actionId);
+    if (!action) return;
+
+    // 1. Remove from writeStack
+    setWriteStack(stack => stack.filter(a => a.id !== actionId));
+
+    // 2. Remove key from server and adjust memory
+    setServers(prev => prev.map(s => {
+      if (s.id === action.serverId) {
+        return { 
+          ...s, 
+          cachedKeys: s.cachedKeys.filter(k => k.key !== action.key),
+          memoryUsed: Math.max(0, s.memoryUsed - (action.memoryAdded || 5))
+        };
+      }
+      return s;
+    }));
   };
 
   const injectReadRequest = () => {

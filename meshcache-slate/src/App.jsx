@@ -16,7 +16,7 @@ function App() {
     sortOrder,
     activeNodeId,
     setActiveNodeId,
-    compressionSegments,
+    compressionSegments
     addMockData,
     writeData,
     undoWrite,
@@ -46,7 +46,7 @@ function App() {
         <p className="text-sm text-slate-400">High-speed distributed memory dashboard</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-fr flex-1">
         {/* Top Left: Map */}
         <div className="col-span-1 md:col-span-2 row-span-2">
           <DataLocationMap 
@@ -58,7 +58,7 @@ function App() {
         </div>
 
         {/* Top Right Col 1: History & Queue */}
-        <div className="col-span-1 row-span-1">
+        <div className="col-span-1 row-span-1 h-[280px]">
           <WriteHistoryUndo 
             writeStack={writeStack} 
             writeData={writeData} 
@@ -72,7 +72,7 @@ function App() {
         </div>
 
         {/* Request Queue */}
-        <div className="col-span-1 row-span-1">
+        <div className="col-span-1 row-span-1 h-[180px]">
           <ReadRequestQueue 
             readQueue={readQueue} 
             injectReadRequest={injectReadRequest} 
@@ -88,7 +88,7 @@ function App() {
         </div>
 
         {/* Bottom Middle: Compression */}
-        <div className="col-span-1 row-span-1">
+        <div className="col-span-1 row-span-1 h-full">
           <CompressionSorter 
             segments={compressionSegments}
             sortOrder={sortOrder}
@@ -97,7 +97,7 @@ function App() {
         </div>
 
         {/* Bottom Right: Old Data Remover */}
-        <div className="col-span-1 row-span-1">
+        <div className="col-span-1 row-span-1 h-full">
           <OldDataRemover evictions={evictions} />
         </div>
       </div>

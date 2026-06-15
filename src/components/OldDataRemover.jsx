@@ -39,7 +39,7 @@ export default function OldDataRemover({ evictions }) {
   }, [evictions]);
 
   return (
-    <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-full">
+    <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto">
       <h2 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
         <Trash2 className="w-5 h-5 text-dashboard-accent" />
         h. Old Data Remover
