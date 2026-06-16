@@ -1,88 +1,46 @@
-# School of Future Tech
-
-# Case Study Report
-
-## on
-
 # MeshCache Slate – Distributed Cache Management Dashboard
 
-### by
+## 2.1 Project Title
 
-SOHAM PATIL
-
----
-
-# INDEX
-
-1. Introduction to the Case Study
-2. Problem Statement / Case Background (Abstract)
-3. Case Study Design
-4. Methods & Algorithms Technology Applied
-5. Implementation Details and Snapshots
-6. Results and Conclusion
-7. References
+**MeshCache Slate: Distributed Cache Management Dashboard Using React and Data Structures & Algorithms**
 
 ---
 
-# 1. Introduction to the Case Study
+## 2.2 Problem Statement
 
-Modern distributed applications depend heavily on caching systems to improve performance, reduce database load, and provide faster response times. In large-scale systems, multiple cache servers work together to store and retrieve data efficiently.
+Distributed systems rely on cache servers to improve application performance and reduce database load. As the number of cache servers increases, managing data placement, request handling, server monitoring, memory optimization, and cache eviction becomes increasingly complex.
 
-Managing cache servers involves monitoring server health, tracking write operations, processing read requests, balancing memory usage, removing stale data, and visualizing network relationships. Manual monitoring becomes difficult as the number of servers increases.
-
-This case study presents MeshCache Slate, a distributed cache management dashboard developed using React JS. The system simulates real-world cache server operations and demonstrates the practical application of Data Structures and Algorithms through an interactive visualization platform.
+The objective of MeshCache Slate is to simulate a distributed caching environment and provide real-time visualization of cache operations while demonstrating the practical application of Data Structures and Algorithms such as Stack, Queue, Sorting, Graphs, and LRU Cache Management.
 
 ---
 
-# 2. Problem Statement / Case Background (Abstract)
+## 2.3 Objectives
 
-## Background
-
-Distributed cache systems require efficient management of memory, request handling, data placement, server monitoring, and cache eviction. Traditional monitoring approaches often lack visualization and real-time operational insights.
-
-## Abstract
-
-MeshCache Slate is a React-based cache management dashboard that integrates multiple DSA concepts to simulate modern distributed caching systems.
-
-The system provides:
-
-• Data Location Mapping for cache visualization.
-
-• Write History Tracking using Stack.
-
-• Read Request Processing using Queue.
-
-• Server Health Monitoring.
-
-• Compression-Based Memory Sorting.
-
-• Network Topology Visualization using Graph concepts.
-
-• Cache Eviction using LRU (Least Recently Used).
-
-• Real-time Dashboard Updates using React State Management.
-
-The project demonstrates how fundamental DSA concepts can be applied to solve practical problems in distributed computing environments.
+* Simulate a distributed cache cluster.
+* Visualize server-data relationships.
+* Track write operations and provide undo functionality.
+* Process read requests in FIFO order.
+* Monitor server health and memory utilization.
+* Sort memory segments by compression efficiency.
+* Visualize network topology and routing paths.
+* Implement LRU cache eviction.
+* Demonstrate real-world applications of Data Structures and Algorithms.
 
 ---
 
-# 3. Case Study Design
+## 2.4 System Overview / Architecture
 
 The MeshCache Slate system consists of the following modules:
-
-Server Cluster
-
-↓
 
 Data Location Map
 
 ↓
 
-Write History Manager
+Write History
 
 ↓
 
-Read Request Queue
+Request Queue
 
 ↓
 
@@ -100,332 +58,306 @@ Network Map Hub
 
 Old Data Remover (LRU)
 
-## Workflow
+### Workflow
 
-1. Cache servers are initialized.
-2. Mock data is written into cache nodes.
-3. Write operations are recorded in history.
-4. Read requests enter the processing queue.
-5. Server status is continuously monitored.
-6. Compression statistics are sorted.
-7. Network relationships are visualized.
-8. Old cache entries are removed using LRU.
+1. User selects a cache server.
+2. Data is written into the selected cache node.
+3. Write operations are stored in history.
+4. Read requests enter the FIFO queue.
+5. Server status and memory load are monitored.
+6. Compression segments are sorted.
+7. Network routes are visualized.
+8. Old cache entries are removed using LRU policy.
 
 ---
 
-# 4. Methods & Algorithms Technology Applied
-
-## Data Structures Used
+## 2.5 Data Structures and Algorithms Used
 
 ### 1. Stack
 
-Purpose:
+**Purpose:** Maintain write history and support Undo functionality.
 
-Track write operations and support Undo functionality.
+**Application:** Write History module.
 
-Reason:
+**Complexity:**
 
-Undo follows Last In First Out (LIFO).
-
-Example:
-
-Write Key A
-
-Write Key B
-
-Write Key C
-
-Undo removes Key C first.
-
-Complexity:
-
-Push = O(1)
-
-Pop = O(1)
+* Push → O(1)
+* Pop → O(1)
 
 ---
 
 ### 2. Queue
 
-Purpose:
+**Purpose:** Process read requests in arrival order.
 
-Manage incoming read requests.
+**Application:** Request Queue module.
 
-Reason:
+**Complexity:**
 
-Requests should be processed in arrival order.
-
-Example:
-
-Request A
-
-Request B
-
-Request C
-
-Processing Order:
-
-A → B → C
-
-Complexity:
-
-Enqueue = O(1)
-
-Dequeue = O(1)
+* Enqueue → O(1)
+* Dequeue → O(1)
 
 ---
 
 ### 3. Array
 
-Purpose:
+**Purpose:** Store servers, cache keys, memory segments, and request data.
 
-Store server information and cache data.
+**Application:** Data Location Map and Server Management.
 
-Reason:
+**Complexity:**
 
-Provides efficient traversal and rendering.
-
-Complexity:
-
-Access = O(1)
-
-Traversal = O(n)
+* Access → O(1)
+* Traversal → O(n)
 
 ---
 
 ### 4. Sorting
 
-Purpose:
+**Purpose:** Sort memory sections based on compression ratio.
 
-Sort memory sections according to compression ratio.
+**Application:** Compression Sorter.
 
-Example:
+**Complexity:**
 
-80%
-
-50%
-
-30%
-
-Sorted Output:
-
-80%
-
-50%
-
-30%
-
-Complexity:
-
-O(n log n)
+* O(n log n)
 
 ---
 
 ### 5. Graph
 
-Purpose:
+**Purpose:** Represent server network topology.
 
-Represent relationships between cache servers.
+**Application:** Network Map Hub.
 
-Node = Cache Server
+**Components:**
 
-Edge = Network Connection
-
-Example:
-
-Server 1 ---- Server 2
-
-|
-
-Server 3
-
-Reason:
-
-Graph structures naturally model distributed systems.
+* Node → Server
+* Edge → Connection
 
 ---
 
 ### 6. LRU (Least Recently Used)
 
-Purpose:
+**Purpose:** Remove old cache entries when memory exceeds limits.
 
-Remove outdated cache entries.
+**Application:** Old Data Remover.
 
-Reason:
+**Complexity:**
 
-Old unused data consumes memory.
-
-Example:
-
-Cache Full
-
-↓
-
-Remove Least Recently Accessed Entry
-
-Complexity:
-
-O(1) with optimized implementation.
+* O(1) (Optimized implementation)
 
 ---
 
-## React Concepts Used
+## 2.6 Implementation Approach
 
-### useState
+### Frontend
 
-Used to manage:
+* React JS
+* Vite
 
-• Servers
+### Styling
 
-• Queue
+* Tailwind CSS
 
-• Write History
+### State Management
 
-• Compression Data
+* useState
+* useEffect
+* Custom Hook (`useCacheSimulation`)
 
-• Active Nodes
+### Libraries Used
 
-### useEffect
+* Lucide React (Icons)
+* React Flow (Graph Visualization)
+* Recharts (Charts)
 
-Used for:
+### Core Components
 
-• Periodic updates
-
-• Server monitoring
-
-• Simulation cycles
-
-### Custom Hook
-
-useCacheSimulation()
-
-Purpose:
-
-Centralized business logic and state management.
-
----
-
-## Technology Stack
-
-Frontend:
-
-React JS
-
-Build Tool:
-
-Vite
-
-Styling:
-
-Tailwind CSS
-
-Icons:
-
-Lucide React
-
-Graph Visualization:
-
-React Flow
-
-Charts:
-
-Recharts
-
-Language:
-
-JavaScript
+1. DataLocationMap
+2. WriteHistory
+3. RequestQueue
+4. ServerStatusList
+5. CompressionSorter
+6. NetworkMapHub
+7. OldDataRemover
 
 ---
 
-# 5. Implementation Details and Snapshots
+## 2.7 Time and Space Complexity Analysis
 
-## Core Modules
-
-### 1. Data Location Map
-
-Displays cache entries stored inside each server.
-
-### 2. Write History
-
-Tracks cache write operations.
-
-Supports Undo using Stack.
-
-### 3. Request Queue
-
-Processes read requests using FIFO Queue.
-
-### 4. Server Status List
-
-Displays ONLINE and FAILED server states.
-
-### 5. Compression Sorter
-
-Sorts memory sections according to compression efficiency.
-
-### 6. Network Map Hub
-
-Visualizes server relationships using Graph concepts.
-
-### 7. Old Data Remover
-
-Implements LRU eviction strategy.
-
-### 8. Cache Simulation Engine
-
-Implemented through useCacheSimulation custom hook.
-
-(Add project screenshots here)
+| Module             | DSA Used | Time Complexity | Space Complexity |
+| ------------------ | -------- | --------------- | ---------------- |
+| Write History      | Stack    | O(1)            | O(n)             |
+| Request Queue      | Queue    | O(1)            | O(n)             |
+| Server Data        | Array    | O(n)            | O(n)             |
+| Compression Sorter | Sorting  | O(n log n)      | O(n)             |
+| Network Map        | Graph    | O(V + E)        | O(V + E)         |
+| LRU Eviction       | Cache    | O(1)            | O(n)             |
 
 ---
 
-# 6. Results and Conclusion
+## 2.8 Execution Steps
 
-## Results
+### Step 1
 
-• Successfully simulated distributed cache servers.
+Clone the repository:
 
-• Implemented Write History using Stack.
+```bash
+git clone https://github.com/your-repository-link
+```
 
-• Implemented Request Queue using Queue.
+### Step 2
 
-• Visualized server-data relationships.
+Navigate to project directory:
 
-• Monitored server health dynamically.
+```bash
+cd meshcache-slate
+```
 
-• Sorted memory sections efficiently.
+### Step 3
 
-• Simulated LRU cache eviction.
+Install dependencies:
 
-• Demonstrated graph-based network topology.
+```bash
+npm install
+```
 
-## Conclusion
+### Step 4
 
-MeshCache Slate successfully demonstrates the practical implementation of Data Structures and Algorithms in distributed cache management systems. By combining Stack, Queue, Arrays, Sorting, Graphs, and LRU caching with modern React development practices, the project provides an interactive simulation of real-world cache infrastructure.
+Run the application:
 
-The dashboard improves understanding of distributed systems while showcasing efficient data organization, request handling, memory management, and network visualization techniques.
+```bash
+npm run dev
+```
+
+### Step 5
+
+Open browser:
+
+```text
+http://localhost:5173
+```
 
 ---
 
-# 7. References
+## 2.9 Sample Inputs and Outputs
 
-1. React JS Documentation
+### Input 1
 
-2. Vite Documentation
+Select Server 02
 
-3. Tailwind CSS Documentation
+Click:
 
-4. Lucide React Documentation
+```text
+Add Mock Data
+```
 
-5. React Flow Documentation
+### Output
 
-6. Recharts Documentation
+```text
+Srv 02 Cache
 
-7. Data Structures and Algorithms Concepts
+key_pt3um
+```
 
-8. Distributed Caching System Fundamentals
+---
 
-9. Cache Eviction Policies (LRU)
+### Input 2
 
-10. Graph Theory Fundamentals
+Click:
 
+```text
+Inject Request
+```
+
+### Output
+
+```text
+Req #449
+Req #570
+Req #212
+```
+
+---
+
+### Input 3
+
+Click:
+
+```text
+Undo
+```
+
+### Output
+
+```text
+Latest write operation removed.
+```
+
+---
+
+## 2.10 Screenshots
+
+### Dashboard Overview
+
+Insert Screenshot 1
+
+### Data Location Map
+
+Insert Screenshot 2
+
+### Write History
+
+Insert Screenshot 3
+
+### Request Queue
+
+Insert Screenshot 4
+
+### Network Map Hub
+
+Insert Screenshot 5
+
+### Server Status List
+
+Insert Screenshot 6
+
+### Compression Sorter
+
+Insert Screenshot 7
+
+### Old Data Remover
+
+Insert Screenshot 8
+
+---
+
+## 2.11 Results and Observations
+
+### Results
+
+* Successfully simulated distributed cache management.
+* Implemented Stack-based write history tracking.
+* Implemented Queue-based request processing.
+* Visualized server-data relationships.
+* Simulated graph-based network topology.
+* Implemented memory compression sorting.
+* Demonstrated LRU cache eviction.
+* Provided real-time server monitoring.
+
+### Observations
+
+* Stack is effective for Undo operations.
+* Queue ensures fair request processing.
+* Graph structures naturally model server networks.
+* LRU efficiently manages memory resources.
+* React state management enables real-time UI updates.
+
+---
+
+## 2.12 Conclusion
+
+MeshCache Slate successfully demonstrates the practical implementation of Data Structures and Algorithms in a distributed cache management environment. The project integrates Stack, Queue, Arrays, Sorting, Graphs, and LRU caching concepts with React-based state management to create an interactive and educational dashboard.
+
+The system effectively visualizes cache operations, request processing, server monitoring, memory optimization, and network relationships, making it a strong demonstration of DSA concepts applied to modern distributed systems.
