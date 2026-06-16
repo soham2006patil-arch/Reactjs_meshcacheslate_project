@@ -1,12 +1,12 @@
 # MeshCache Slate – Distributed Cache Management Dashboard
 
-## 2.1 Project Title
+##  Project Title
 
 **MeshCache Slate: Distributed Cache Management Dashboard Using React and Data Structures & Algorithms**
 
 ---
 
-## 2.2 Problem Statement
+##  Problem Statement
 
 Distributed systems rely on cache servers to improve application performance and reduce database load. As the number of cache servers increases, managing data placement, request handling, server monitoring, memory optimization, and cache eviction becomes increasingly complex.
 
@@ -14,7 +14,7 @@ The objective of MeshCache Slate is to simulate a distributed caching environmen
 
 ---
 
-## 2.3 Objectives
+##  Objectives
 
 * Simulate a distributed cache cluster.
 * Visualize server-data relationships.
@@ -28,7 +28,7 @@ The objective of MeshCache Slate is to simulate a distributed caching environmen
 
 ---
 
-## 2.4 System Overview / Architecture
+##  System Overview / Architecture
 
 The MeshCache Slate system consists of the following modules:
 
@@ -71,7 +71,7 @@ Old Data Remover (LRU)
 
 ---
 
-## 2.5 Data Structures and Algorithms Used
+##  Data Structures and Algorithms Used
 
 ### 1. Stack
 
@@ -149,7 +149,7 @@ Old Data Remover (LRU)
 
 ---
 
-## 2.6 Implementation Approach
+##  Implementation Approach
 
 ### Frontend
 
@@ -184,7 +184,7 @@ Old Data Remover (LRU)
 
 ---
 
-## 2.7 Time and Space Complexity Analysis
+## Time and Space Complexity Analysis
 
 | Module             | DSA Used | Time Complexity | Space Complexity |
 | ------------------ | -------- | --------------- | ---------------- |
@@ -197,7 +197,7 @@ Old Data Remover (LRU)
 
 ---
 
-## 2.8 Execution Steps
+## Execution Steps
 
 ### Step 1
 
@@ -241,7 +241,7 @@ http://localhost:5173
 
 ---
 
-## 2.9 Sample Inputs and Outputs
+##  Sample Inputs and Outputs
 
 ### Input 1
 
@@ -297,7 +297,7 @@ Latest write operation removed.
 
 ---
 
-## 2.10 Screenshots
+##  Screenshots
 
 ### Dashboard Overview
 
@@ -306,7 +306,7 @@ Latest write operation removed.
 
 ---
 
-## 2.11 Results and Observations
+##  Results and Observations
 
 ### Results
 
@@ -329,7 +329,7 @@ Latest write operation removed.
 
 ---
 
-## 2.12 Conclusion
+##  Conclusion
 
 MeshCache Slate successfully demonstrates the practical implementation of Data Structures and Algorithms in a distributed cache management environment. The project integrates Stack, Queue, Arrays, Sorting, Graphs, and LRU caching concepts with React-based state management to create an interactive and educational dashboard.
 
