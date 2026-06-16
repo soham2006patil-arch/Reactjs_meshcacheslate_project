@@ -301,35 +301,8 @@ Latest write operation removed.
 
 ### Dashboard Overview
 
-Insert Screenshot 1
+<img width="1037" height="771" alt="image" src="https://github.com/user-attachments/assets/2d2bab75-5865-405b-b7ae-61290b7c5df9" />
 
-### Data Location Map
-
-Insert Screenshot 2
-
-### Write History
-
-Insert Screenshot 3
-
-### Request Queue
-
-Insert Screenshot 4
-
-### Network Map Hub
-
-Insert Screenshot 5
-
-### Server Status List
-
-Insert Screenshot 6
-
-### Compression Sorter
-
-Insert Screenshot 7
-
-### Old Data Remover
-
-Insert Screenshot 8
 
 ---
 
