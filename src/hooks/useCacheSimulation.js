@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const INITIAL_SERVERS = Array.from({ length: 8 }, (_, i) => ({
   id: `Srv 0${i + 1}`,
   status: 'ONLINE',
-  memoryUsed: Math.floor(Math.random() * 20) + 10, // 10-30%
+  memoryUsed: Math.floor(Math.random() * 20) + 15, // 15-35%
   memoryCapacity: 1024,
   ping: Math.floor(Math.random() * 50) + 10,
   cachedKeys: [] // Array of { key: string, lastAccessed: number }
@@ -11,6 +11,22 @@ const INITIAL_SERVERS = Array.from({ length: 8 }, (_, i) => ({
 
 const generateKey = () => `key_${Math.random().toString(36).substring(2, 7)}`;
 const generateRequestId = () => `Req #${Math.floor(Math.random() * 1000)}`;
+
+const generateInitialHistory = () => {
+  const data = [];
+  const now = Date.now();
+  for (let i = 14; i >= 0; i--) {
+    const timeStr = new Date(now - i * 5000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    data.push({
+      time: timeStr,
+      memory: Math.floor(Math.random() * 10) + 22, // 22-32%
+      throughput: Math.floor(Math.random() * 30) + 95, // 95-125
+      hits: Math.floor(Math.random() * 20) + 88,
+      misses: Math.floor(Math.random() * 4) + 2
+    });
+  }
+  return data;
+};
 
 export function useCacheSimulation() {
   const [servers, setServers] = useState(INITIAL_SERVERS);
@@ -27,6 +43,13 @@ export function useCacheSimulation() {
     { id: 'M3', name: 'Memory Segment 3', ratio: 84 },
   ]);
 
+  const [history, setHistory] = useState(() => generateInitialHistory());
+  const [cumulativeStats, setCumulativeStats] = useState({
+    totalRequests: 18450,
+    cacheHits: 17390,
+    cacheMisses: 1060
+  });
+
   // Simulation Tick
   useEffect(() => {
     const tick = setInterval(() => {
@@ -38,17 +61,8 @@ export function useCacheSimulation() {
         return next;
       });
 
-      // 2 & 3. Memory increase and LRU eviction
-      setServers(prev => prev.map(server => {
-        if (server.status === 'FAILED') return server;
-        
-        // Randomly pick this server to increase? The prompt says "Randomly pick an ONLINE server", 
-        // to simplify in state update we'll just pick one.
-        return server; 
-      }));
-
-      // Let's do the random server pick separately to ensure only one is picked, or randomly increase all slightly.
-      // "Randomly pick an ONLINE server and increase its memoryUsed by 2-5%."
+      // 2 & 3. Memory increase, pings, and LRU eviction
+      let avgMemory = 25;
       setServers(prev => {
         const onlineServers = prev.filter(s => s.status === 'ONLINE');
         if (onlineServers.length === 0) return prev;
@@ -56,41 +70,74 @@ export function useCacheSimulation() {
         const targetServerIndex = Math.floor(Math.random() * onlineServers.length);
         const targetServerId = onlineServers[targetServerIndex].id;
 
-        return prev.map(server => {
+        const updated = prev.map(server => {
+          let currentMem = server.memoryUsed;
+          let currentKeys = [...server.cachedKeys];
+          
           if (server.id === targetServerId) {
-            let newMemory = server.memoryUsed + (Math.random() * 3 + 2); // 2-5%
-            let newKeys = [...server.cachedKeys];
+            currentMem = server.memoryUsed + (Math.random() * 3 + 2); // 2-5%
             
-            // "If any server's memoryUsed exceeds 95%, automatically trigger the 'Old Data Remover (LRU)' function 
-            // to evict the oldest 3 keys... drop back to 70%"
-            if (newMemory > 95) {
-              // Sort by lastAccessed ascending
-              newKeys.sort((a, b) => a.lastAccessed - b.lastAccessed);
-              // Evict oldest 3
-              const evicted = newKeys.slice(0, 3);
-              newKeys = newKeys.slice(3);
-              newMemory = 70;
+            if (currentMem > 95) {
+              currentKeys.sort((a, b) => a.lastAccessed - b.lastAccessed);
+              const evicted = currentKeys.slice(0, 3);
+              currentKeys = currentKeys.slice(3);
+              currentMem = 70;
               
               if (evicted.length > 0) {
-                setEvictions(prev => [{
+                setEvictions(prevEv => [{
                   id: Math.random().toString(),
                   keys: evicted,
                   serverId: targetServerId,
                   timestamp: Date.now()
-                }, ...prev].slice(0, 5)); // Keep last 5 evictions
+                }, ...prevEv].slice(0, 5));
               }
             }
-            return { ...server, memoryUsed: newMemory, cachedKeys: newKeys };
           }
-          return server;
+
+          let newPing;
+          if (server.status === 'FAILED') {
+            newPing = 0;
+            currentMem = 0;
+          } else {
+            newPing = Math.max(5, server.ping + (Math.floor(Math.random() * 11) - 5));
+          }
+
+          return { ...server, memoryUsed: currentMem, cachedKeys: currentKeys, ping: newPing };
         });
+
+        const activeServers = updated.filter(s => s.status === 'ONLINE');
+        avgMemory = activeServers.length 
+          ? activeServers.reduce((sum, s) => sum + s.memoryUsed, 0) / activeServers.length 
+          : 0;
+
+        return updated;
       });
-      
-      // Update pings randomly
-      setServers(prev => prev.map(server => {
-        if (server.status === 'FAILED') return { ...server, ping: 0 };
-        return { ...server, ping: Math.max(5, server.ping + (Math.floor(Math.random() * 11) - 5)) };
+
+      // Update history and cumulative stats
+      const hitsInc = Math.floor(Math.random() * 20) + 85;
+      const missesInc = Math.floor(Math.random() * 4) + 1;
+      const totalInc = hitsInc + missesInc;
+
+      setCumulativeStats(prev => ({
+        totalRequests: prev.totalRequests + totalInc,
+        cacheHits: prev.cacheHits + hitsInc,
+        cacheMisses: prev.cacheMisses + missesInc
       }));
+
+      setHistory(prevHistory => {
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const newPoint = {
+          time: timeStr,
+          memory: Math.round(avgMemory || 25),
+          throughput: totalInc,
+          hits: hitsInc,
+          misses: missesInc
+        };
+        const nextHistory = [...prevHistory];
+        if (nextHistory.length >= 15) nextHistory.shift();
+        nextHistory.push(newPoint);
+        return nextHistory;
+      });
 
     }, 2500);
 
@@ -238,6 +285,8 @@ export function useCacheSimulation() {
     injectReadRequest,
     toggleServerStatus,
     sortCompression,
-    evictions
+    evictions,
+    history,
+    cumulativeStats
   };
 }

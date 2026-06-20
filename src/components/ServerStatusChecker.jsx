@@ -1,56 +1,106 @@
-import { Activity, Power, PowerOff } from 'lucide-react';
+import { Activity, Power, PowerOff, ShieldCheck, ShieldAlert } from 'lucide-react';
 
 export default function ServerStatusChecker({ servers, toggleServerStatus }) {
   return (
-    <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto">
-      <h2 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
-        <Activity className="w-5 h-5 text-dashboard-accent" />
-        Server Status list
-      </h2>
+    <div className="bg-dashboard-card/65 backdrop-blur-md rounded-xl border border-dashboard-border shadow-sm flex flex-col h-full">
+      <div className="flex items-center gap-2 p-5 border-b border-dashboard-border/50">
+        <div className="p-1.5 rounded bg-cyan-500/10 text-cyan-500">
+          <Activity className="w-4 h-4" />
+        </div>
+        <div>
+          <h4 className="text-sm font-bold text-dashboard-text-primary">Server Node Registry</h4>
+          <p className="text-[10px] text-dashboard-text-secondary">Individual memory footprint & routing status</p>
+        </div>
+      </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+      <div className="flex-1 overflow-x-auto max-h-[350px]">
+        <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="text-slate-400 border-b border-dashboard-border">
-              <th className="pb-2 font-medium">Server</th>
-              <th className="pb-2 font-medium">Status</th>
-              <th className="pb-2 font-medium">Load %</th>
-              <th className="pb-2 font-medium">Action</th>
+            <tr className="text-dashboard-text-secondary border-b border-dashboard-border/50 bg-[#020617]/20 sticky top-0 backdrop-blur-md">
+              <th className="py-3 px-5 font-semibold uppercase tracking-wider">Node ID</th>
+              <th className="py-3 px-4 font-semibold uppercase tracking-wider">Status</th>
+              <th className="py-3 px-4 font-semibold uppercase tracking-wider">Ping</th>
+              <th className="py-3 px-4 font-semibold uppercase tracking-wider">Memory Allocation</th>
+              <th className="py-3 px-5 font-semibold uppercase tracking-wider text-right">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-dashboard-border/30">
             {servers.map(server => {
               const isOnline = server.status === 'ONLINE';
+              const memoryPct = Math.round(server.memoryUsed);
+              
+              // Determine progress bar color based on memory load
+              let barColor = 'bg-cyan-500';
+              if (memoryPct > 80) barColor = 'bg-amber-500';
+              if (memoryPct > 90) barColor = 'bg-red-500';
+              if (!isOnline) barColor = 'bg-slate-700';
+
               return (
-                <tr key={server.id} className="border-b border-dashboard-border/50">
-                  <td className="py-3 font-mono">{server.id}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${isOnline ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
-                      {server.status}
+                <tr 
+                  key={server.id} 
+                  className="hover:bg-white/[0.01] transition-colors duration-200"
+                >
+                  {/* Node ID */}
+                  <td className="py-3.5 px-5 font-mono font-semibold text-dashboard-text-primary">
+                    {server.id}
+                  </td>
+                  
+                  {/* Status Badges */}
+                  <td className="py-3.5 px-4">
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
+                      isOnline 
+                        ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                        : 'bg-red-500/10 text-red-500 border-red-500/20'
+                    }`}>
+                      {isOnline ? (
+                        <>
+                          <ShieldCheck className="w-3 h-3" />
+                          ONLINE
+                        </>
+                      ) : (
+                        <>
+                          <ShieldAlert className="w-3 h-3" />
+                          FAILED
+                        </>
+                      )}
                     </span>
                   </td>
-                  <td className="py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
+
+                  {/* Ping latency */}
+                  <td className="py-3.5 px-4 font-mono font-medium text-dashboard-text-secondary">
+                    {isOnline ? `${server.ping}ms` : '—'}
+                  </td>
+
+                  {/* Memory Progress Bar */}
+                  <td className="py-3.5 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-32 h-1.5 bg-[#020617] rounded-full overflow-hidden border border-white/5">
                         <div
-                          className={`h-full transition-all duration-500 ${isOnline ? 'bg-dashboard-accent' : 'bg-slate-700'}`}
-                          style={{ width: `${server.memoryUsed}%` }}
+                          className={`h-full transition-all duration-500 ${barColor}`}
+                          style={{ width: `${isOnline ? memoryPct : 0}%` }}
                         />
                       </div>
-                      <span className={`text-xs ${isOnline ? 'text-slate-300' : 'text-slate-600'}`}>
-                        {Math.round(server.memoryUsed)}%
+                      <span className={`font-mono text-[11px] font-semibold ${isOnline ? 'text-dashboard-text-primary' : 'text-dashboard-text-secondary'}`}>
+                        {isOnline ? `${memoryPct}%` : '0%'}
                       </span>
                     </div>
                   </td>
-                  <td className="py-3">
+
+                  {/* Actions */}
+                  <td className="py-3.5 px-5 text-right">
                     <button
                       onClick={() => toggleServerStatus(server.id)}
-                      className="p-1.5 rounded hover:bg-slate-700 transition-colors"
-                      title={isOnline ? "Simulate Crash" : "Reboot"}
+                      className={`p-1.5 rounded-md border transition-all duration-200 ${
+                        isOnline 
+                          ? 'border-red-500/10 text-red-400/80 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20' 
+                          : 'border-emerald-500/10 text-emerald-400/80 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20'
+                      }`}
+                      title={isOnline ? "Simulate Node Failure" : "Reboot Node"}
                     >
-                      {isOnline ? <PowerOff className="w-4 h-4 text-red-400" /> : <Power className="w-4 h-4 text-green-400" />}
+                      {isOnline ? <PowerOff className="w-3.5 h-3.5" /> : <Power className="w-3.5 h-3.5" />}
                     </button>
                   </td>
+
                 </tr>
               );
             })}
