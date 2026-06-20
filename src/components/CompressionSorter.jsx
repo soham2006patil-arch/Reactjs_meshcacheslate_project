@@ -5,9 +5,9 @@ export default function CompressionSorter({ segments, sortOrder, sortCompression
     <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto">
       <h2 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
         <AlignLeft className="w-5 h-5 text-dashboard-accent" />
-        e. Compression Sorter
+        Compression Sorter
       </h2>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
@@ -28,7 +28,7 @@ export default function CompressionSorter({ segments, sortOrder, sortCompression
                 <td className="py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-24 h-4 bg-slate-800 rounded overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-green-500 transition-all duration-500"
                         style={{ width: `${seg.ratio}%` }}
                       />

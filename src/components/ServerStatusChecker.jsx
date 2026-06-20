@@ -5,9 +5,9 @@ export default function ServerStatusChecker({ servers, toggleServerStatus }) {
     <div className="bg-dashboard-card p-4 rounded-xl border border-dashboard-border flex flex-col h-auto">
       <h2 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
         <Activity className="w-5 h-5 text-dashboard-accent" />
-        d. Server Status list
+        Server Status list
       </h2>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
@@ -32,7 +32,7 @@ export default function ServerStatusChecker({ servers, toggleServerStatus }) {
                   <td className="py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className={`h-full transition-all duration-500 ${isOnline ? 'bg-dashboard-accent' : 'bg-slate-700'}`}
                           style={{ width: `${server.memoryUsed}%` }}
                         />
@@ -43,7 +43,7 @@ export default function ServerStatusChecker({ servers, toggleServerStatus }) {
                     </div>
                   </td>
                   <td className="py-3">
-                    <button 
+                    <button
                       onClick={() => toggleServerStatus(server.id)}
                       className="p-1.5 rounded hover:bg-slate-700 transition-colors"
                       title={isOnline ? "Simulate Crash" : "Reboot"}

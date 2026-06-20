@@ -77,7 +77,7 @@ export default function NetworkMapHub({ servers }) {
       // Compute edges for SVG rendering
       const edges = [];
       for (let i = 0; i < foundPath.length - 1; i++) {
-        edges.push(`${foundPath[i]}-${foundPath[i+1]}`);
+        edges.push(`${foundPath[i]}-${foundPath[i + 1]}`);
       }
 
       return { path: foundPath, latency: totalLatency, pathEdges: edges };
@@ -92,23 +92,23 @@ export default function NetworkMapHub({ servers }) {
         <div>
           <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
             <Network className="w-5 h-5 text-dashboard-accent" />
-            f. Network Map Hub
+            Network Map Hub
           </h2>
           <p className="text-xs text-slate-400">Interactive graph & g. Quickest Route</p>
         </div>
       </div>
 
       <div className="flex gap-2 mb-4">
-        <select 
-          value={source} 
+        <select
+          value={source}
           onChange={e => setSource(e.target.value)}
           className="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 flex-1 focus:outline-none focus:border-dashboard-accent"
         >
           {servers.map(s => <option key={s.id} value={s.id}>{s.id} {s.status === 'FAILED' ? '(Offline)' : ''}</option>)}
         </select>
         <span className="text-slate-500 self-center text-xs">to</span>
-        <select 
-          value={target} 
+        <select
+          value={target}
           onChange={e => setTarget(e.target.value)}
           className="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 flex-1 focus:outline-none focus:border-dashboard-accent"
         >
@@ -134,7 +134,7 @@ export default function NetworkMapHub({ servers }) {
       <div className="relative flex-1 w-full bg-slate-900 rounded-lg border border-slate-800 min-h-[250px] overflow-hidden mt-2 p-4">
         <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
           {/* Base edges */}
-          {Object.entries(TOPOLOGY).map(([node, neighbors]) => 
+          {Object.entries(TOPOLOGY).map(([node, neighbors]) =>
             neighbors.map(neighbor => {
               // avoid duplicate lines by checking order
               if (node < neighbor) {
@@ -142,7 +142,7 @@ export default function NetworkMapHub({ servers }) {
                 const c2 = COORDS[neighbor];
                 const isPath = pathEdges.includes(`${node}-${neighbor}`) || pathEdges.includes(`${neighbor}-${node}`);
                 return (
-                  <line 
+                  <line
                     key={`${node}-${neighbor}`}
                     x1={`${c1.x}%`} y1={`${c1.y}%`}
                     x2={`${c2.x}%`} y2={`${c2.y}%`}
@@ -164,9 +164,9 @@ export default function NetworkMapHub({ servers }) {
           const inPath = path.includes(server.id);
           const isSource = source === server.id;
           const isTarget = target === server.id;
-          
+
           return (
-            <div 
+            <div
               key={server.id}
               className={`absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center
                 w-10 h-10 rounded-full border-2 transition-all duration-300 z-10

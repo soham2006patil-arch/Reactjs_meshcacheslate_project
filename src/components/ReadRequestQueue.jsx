@@ -7,16 +7,16 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
 
   useEffect(() => {
     const prevQueue = prevQueueRef.current;
-    
+
     // Find items that are newly added
     const added = readQueue.filter(req => !prevQueue.includes(req));
     // Find items that were removed
     const removed = prevQueue.filter(req => !readQueue.includes(req));
-    
+
     if (added.length > 0 || removed.length > 0) {
       setDisplayQueue(prev => {
         let newDisplay = [...prev];
-        
+
         // Mark removed items as exiting
         newDisplay = newDisplay.map(item => {
           if (removed.includes(item.id)) {
@@ -38,9 +38,9 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
 
       // Clean up exiting and entering items after animation (300ms)
       const timer = setTimeout(() => {
-        setDisplayQueue(curr => 
+        setDisplayQueue(curr =>
           curr.filter(item => !item.exiting)
-              .map(item => ({ ...item, entering: false }))
+            .map(item => ({ ...item, entering: false }))
         );
       }, 300);
 
@@ -56,9 +56,9 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
       <div className="flex justify-between items-center mb-4 z-10">
         <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
           <ArrowRight className="w-5 h-5 text-dashboard-accent" />
-          c. Request Queue
+          Request Queue
         </h2>
-        <button 
+        <button
           onClick={injectReadRequest}
           className="text-xs bg-dashboard-accent text-slate-900 px-2 py-1.5 rounded hover:bg-cyan-400 flex items-center gap-1 transition-colors font-medium"
         >
@@ -72,10 +72,10 @@ export default function ReadRequestQueue({ readQueue, injectReadRequest }) {
           Queue Length: {readQueue.length}
         </span>
       </div>
-      
+
       <div className="flex items-center gap-2 overflow-x-auto pb-2 min-h-[40px] w-full">
         {displayQueue.map((item, i) => (
-          <div 
+          <div
             key={item.id}
             className={`flex-shrink-0 bg-slate-800 border border-slate-600 px-3 py-1.5 rounded-r-full rounded-l-md text-sm font-mono text-cyan-200 flex items-center gap-2 transition-all duration-300
               ${item.exiting ? 'opacity-0 -translate-x-12 -ml-24 scale-95' : 'opacity-100 translate-x-0 scale-100'}
